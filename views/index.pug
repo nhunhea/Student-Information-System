@@ -1,0 +1,23 @@
+html
+  head
+    title= 'Student List'
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css', integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm', crossorigin='anonymous')
+  body
+    h1= title
+    table.table
+      thead.thead-dark
+        tr
+          th(scope='col') ID
+          th(scope='col') Name
+          th(scope='col') Address
+          th(scope='col') Gender
+          th(scope='col') Date of Birth
+      tbody
+        for student in data
+          tr
+            td= student.studentID
+            td
+              a(href='/students/'+student.studentID) #{student.name}
+            td= student.address
+            td= student.gender
+            td= student.date_of_birth

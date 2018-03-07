@@ -1,0 +1,23 @@
+html
+  head
+    title  test 
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+  body
+    form(action='/students', method='POST')
+      fieldset
+        label(for='name') Name: 
+        input#name(type='text', name='name', autofocus='')
+        br
+        label(for='address') Address: 
+        input#email(type='text', name='address')
+        br
+        label(for='gender') Gender: 
+        input#gender(type='radio', size='25', name='gender', value='M')
+        | Male
+        input#gender(type='radio', name='gender', value='F')
+        | Female
+        br
+        label(for='email') Email: 
+        input#email(type='email', name='email')
+        br
+        input(type='submit', value='Insert Student')
