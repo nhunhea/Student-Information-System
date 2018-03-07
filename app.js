@@ -95,16 +95,18 @@ app.post('/students',function(req,res){
   var gender=req.body.gender;
   var date_of_birth=req.body.date_of_birth;
 
-  res.write('You sent the name "' + req.body.name+'".\n');
+  //res.write('You sent the name "' + req.body.name+'".\n');
 
-  con.connect(function(err) {
-  if (err) throw err;
-  var sql = "INSERT INTO form (name, address, date_of_birth) VALUES ('"+name+"', '"+address+"','"+gender+"','"+date_of_birth+"')";
+  //con.connect(function(err) {
+  //if (err) throw err;
+  var sql = "INSERT INTO students (name, address, gender, date_of_birth) VALUES ('"+name+"', '"+address+"','"+gender+"','"+date_of_birth+"')";
   con.query(sql, function (err, result) {
     if (err) throw err;
     console.log("1 record inserted");
-     res.end();
-  });
+    //res.end();
+    //res.send('index');
+  //});
+  res.redirect('/students');
   });
 })
 
