@@ -4,6 +4,7 @@ html
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css', integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm', crossorigin='anonymous')
   body
     h1= title
+    a.btn.btn-info(href="/students/insert")= 'Insert Student'
     table.table
       thead.thead-dark
         tr
@@ -12,6 +13,7 @@ html
           th(scope='col') Address
           th(scope='col') Gender
           th(scope='col') Date of Birth
+          th
       tbody
         for student in data
           tr
@@ -21,3 +23,6 @@ html
             td= student.address
             td= student.gender
             td= student.date_of_birth
+            td
+              form(action='/students/delete/'+student.studentID method="POST")
+                input.btn.btn-danger(type="submit" value="Delete")

@@ -3,7 +3,8 @@ html
     title  test 
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
   body
-    form(action='/students', method='POST')
+    h1='Insert Student'
+    form(action='/students/insert', method='POST')
       fieldset
         label(for='name') Name: 
         input#name(type='text', name='name', autofocus='')

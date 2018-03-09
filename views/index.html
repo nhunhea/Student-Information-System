@@ -1,0 +1,37 @@
+<html>
+
+<head>
+  <title> test </title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+</head>
+
+<body>
+  <div class="container card">
+    <h1>Edit Student</h1>
+    <form action="/students/edit" method="POST" class="card-body text-center">
+      <div class="form-group">
+        <input id="name" type="hidden" name="studentID" />
+        <label for="name">Name: </label>
+        <input id="name" class="form-control" type="text" name="name" value="" />
+      </div>
+      <div class="form-group">
+          <label for="address">Address: </label>
+          <input id="address" type="text" name="address" />
+      </div>
+      <div class="form-group">
+          <label for="gender">Gender: </label>
+          <input id="gender" type="radio" size="25" name="gender" value="M" />
+          <i class="helper"></i>Male<input id="gender" type="radio" name="gender" value="F" /><i class="helper"></i>Female<br/>
+      </div>
+      <div class="form-group">
+          <label for="date_of_birth">Date Of Birth: </label><input id="date_of_birth"
+          type="date" name="date_of_birth" />
+      </div>
+    </form>
+      <div class="float-right">
+        <button type="submit" class="btn btn-primary">Edit Student</button>
+      </div>  
+  </div>
+</body>
+
+</html>

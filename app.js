@@ -34,7 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 
-function formatDate(date) {
+function formatDatem(date) {
   var d = new Date(date),
       month = '' + (d.getMonth() + 1),
       day = '' + d.getDate(),
@@ -43,7 +43,19 @@ function formatDate(date) {
   if (month.length < 2) month = '0' + month;
   if (day.length < 2) day = '0' + day;
 
-  return [day, month, year].join('-');
+  return [day, month, year].join('/');
+}
+
+function formatDatep(date) {
+  var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
+
+  return [year, month, day].join('-');
 }
 
 function gender(studentGender){
@@ -73,7 +85,7 @@ app.get('/students', function(req, res) {
           'name':rows[i].name,
           'address':rows[i].address,
           'gender':gender(rows[i].gender),
-          'date_of_birth':formatDate(rows[i].date_of_birth)
+          'date_of_birth':formatDatem(rows[i].date_of_birth)
         }
         // Add object into array
         studentList.push(student);
@@ -85,11 +97,11 @@ app.get('/students', function(req, res) {
   });
 });
 
-app.get('/submit',function(req,res){
-  res.render('submit');
+app.get('/students/insert',function(req,res){
+  res.render('insert');
 });
 
-app.post('/students',function(req,res){
+app.post('/students/insert',function(req,res){
   var name=req.body.name;
   var address=req.body.address;
   var gender=req.body.gender;
@@ -109,6 +121,61 @@ app.post('/students',function(req,res){
   res.redirect('/students');
   });
 })
+
+app.get('/students/edit',function(req,res){
+  res.render('edit');
+});
+
+app.get('/students/:id', function(req, res) {
+  con.query('SELECT * FROM students WHERE studentID = ?', [req.params.id], function(err, rows, fields) {
+    if(err) throw err
+    else console.log(rows);
+		
+		// if user not found
+		if (rows.length <= 0) {
+				req.flash('error', 'Student not found with id = ' + req.params.id)
+				res.redirect('/students')
+		}
+		else { // if user found
+				// render to views/index.pug template file
+				res.render('edit', {
+            title: 'Edit Student', 
+            studentID: rows[0].studentID,
+						name: rows[0].name,
+            address: rows[0].address,
+            gender: rows[0].gender,
+            date_of_birth: formatDatep(rows[0].date_of_birth),
+        })
+		}            
+	});
+});
+
+app.post('/students/edit',function(req,res){
+  //var studentID = req.params.id;
+  var studentID=req.body.studentID;
+  var name=req.body.name;
+  var address=req.body.address;
+  var gender=req.body.gender;
+  var date_of_birth=req.body.date_of_birth;
+
+  var sql = "UPDATE students SET name=?, address=?, gender=?, date_of_birth=? WHERE studentID=?";
+  var values = [name, address, gender, date_of_birth, studentID];
+  con.query(sql, values, function (err, result) {
+    if (err) throw err;
+    console.log("1 record updated");
+    // console.log(studentID);
+  res.redirect('/students');
+  });
+});
+
+app.post('/students/delete/:id', function(req,res){
+  var id = req.param("id");
+  var sql = "DELETE from students WHERE studentID=?";
+  con.query(sql, [req.params.id], function(err, result) {
+    if(err) throw err
+    res.redirect('/students');
+  });
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
