@@ -4,6 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const { body,validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -133,7 +135,7 @@ app.get('/students/:id', function(req, res) {
 		
 		// if user not found
 		if (rows.length <= 0) {
-				req.flash('error', 'Student not found with id = ' + req.params.id)
+				// req.flash('error', 'Student not found with id = ' + req.params.id)
 				res.redirect('/students')
 		}
 		else { // if user found
@@ -174,6 +176,45 @@ app.post('/students/delete/:id', function(req,res){
   con.query(sql, [req.params.id], function(err, result) {
     if(err) throw err
     res.redirect('/students');
+  });
+});
+ 
+app.post('/students/search', function(req,res){
+  var studentList = [];
+  var keyword = req.body.keyword;
+  var opt = req.body.opt;
+  var order = req.body.order;
+  
+  var sql = "SELECT * FROM students WHERE "+opt+" LIKE '%"+keyword+"%' ORDER BY "+opt+" "+order+"";
+  //var sql = "SELECT * FROM students WHERE "+opt+" LIKE '%"+keyword+"%'";
+  //var sql = "SELECT * FROM students WHERE name LIKE '%Ani%'";
+  console.log(sql);
+
+  // Do the query to get data.
+  con.query(sql, function(err, rows, fields) {
+    if (err) {
+      res.status(500).json({"status_code": 500,"status_message": "internal server error"});
+    } else {
+      console.log(rows);
+
+      // Loop check on each row
+      for (var i = 0; i < rows.length; i++) {
+
+        // Create an object to save current row's data
+        var student = {
+          'studentID':rows[i].studentID,
+          'name':rows[i].name,
+          'address':rows[i].address,
+          'gender':gender(rows[i].gender),
+          'date_of_birth':formatDatem(rows[i].date_of_birth)
+        }
+        // Add object into array
+        studentList.push(student);
+    }
+
+    // Render index.pug page using array 
+    res.render('index', {title: 'Student List', data: studentList});
+    }
   });
 });
 

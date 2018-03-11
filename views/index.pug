@@ -2,9 +2,25 @@ html
   head
     title= 'Student List'
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css', integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm', crossorigin='anonymous')
+    script(type='text/javascript').
+      function confirm_delete() {
+      return confirm('are you sure?');
+      }
   body
     h1= title
-    a.btn.btn-info(href="/students/insert")= 'Insert Student'
+    // a.btn.btn-info(href="/students/insert")= 'Insert Student'
+    div
+      form(action='/students/search' method="POST")
+        input(type='text', name='keyword', placeholder='Search..')
+        button.btn.btn-info(type='submit') Search
+        select(name= 'order')
+          option#order(value='asc') Ascending
+          option#order(value='desc') Descending
+        select(name = 'opt')
+          option#opt(value='name') Name
+          option#opt(value='address') Address
+        // button.btn.btn-info(type='submit', href='http://localhost:3000/students/sortir') Sort
+      a.btn.btn-info(href='/students/insert') Insert Student
     table.table
       thead.thead-dark
         tr
@@ -25,4 +41,4 @@ html
             td= student.date_of_birth
             td
               form(action='/students/delete/'+student.studentID method="POST")
-                input.btn.btn-danger(type="submit" value="Delete")
+                input.btn.btn-danger(type="submit" value="Delete" onClick="return confirm_delete()")
