@@ -72,7 +72,7 @@ app.get('/students', function(req, res) {
   var studentList = [];
 
   // Do the query to get data.
-  con.query('SELECT * FROM students', function(err, rows, fields) {
+  con.query('SELECT * FROM students ORDER BY studentID DESC', function(err, rows, fields) {
     if (err) {
       res.status(500).json({"status_code": 500,"status_message": "internal server error"});
     } else {
@@ -305,7 +305,7 @@ app.post('/students/search', function(req,res){
   var opt = req.body.opt;
   var order = req.body.order;
   
-  if (keyword == null) var sql = "SELECT * FROM students WHERE "+opt+" LIKE '%"+keyword+"%' ORDER BY studentID DESC";
+  if (order == null) var sql = "SELECT * FROM students WHERE "+opt+" LIKE '%"+keyword+"%' ORDER BY studentID DESC";
   else var sql = "SELECT * FROM students WHERE "+opt+" LIKE '%"+keyword+"%' ORDER BY "+opt+" "+order+"";
   //var sql = "SELECT * FROM students WHERE "+opt+" LIKE '%"+keyword+"%'";
   //var sql = "SELECT * FROM students WHERE name LIKE '%Ani%'";
