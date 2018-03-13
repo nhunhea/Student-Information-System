@@ -109,12 +109,13 @@ app.post('/students/insert',function(req,res){
   var address=req.body.address;
   var gender=req.body.gender;
   var date_of_birth=req.body.date_of_birth;
+  var email=req.body.email;
 
   //res.write('You sent the name "' + req.body.name+'".\n');
 
   //con.connect(function(err) {
   //if (err) throw err;
-  var sql = "INSERT INTO students (name, address, gender, date_of_birth) VALUES ('"+name+"', '"+address+"','"+gender+"','"+date_of_birth+"')";
+  var sql = "INSERT INTO students (name, address, gender, date_of_birth, email) VALUES ('"+name+"', '"+address+"','"+gender+"','"+date_of_birth+"','"+email+"')";
   con.query(sql, function (err, result) {
     if (err) throw err;
     console.log("1 record inserted");
@@ -232,16 +233,6 @@ app.get('/students/stat', function(req,res){
       res.render('stat', {title: 'Stats List', data1: JSON.stringify(help), data2: JSON.stringify(help2)});
     })
   })
-  
-  
- 
-    /*const chartData = [['gender', 'freq']];
-    for (rows in list){
-      chartData.push([gender, freq]);
-    }
-    return console.log(chartData);*/
-  
-  //const a = [{foo: 'bar'} ];res.render('stat', {test : JSON.stringify(a)});
 });
 
 app.get('/students/edit',function(req,res){
@@ -266,6 +257,7 @@ app.get('/students/:id', function(req, res) {
 						name: rows[0].name,
             address: rows[0].address,
             gender: rows[0].gender,
+            email:rows[0].email,
             date_of_birth: formatDatep(rows[0].date_of_birth)
         })
 		}            
@@ -278,10 +270,11 @@ app.post('/students/edit',function(req,res){
   var name=req.body.name;
   var address=req.body.address;
   var gender=req.body.gender;
+  var email=req.body.email;
   var date_of_birth=req.body.date_of_birth;
 
-  var sql = "UPDATE students SET name=?, address=?, gender=?, date_of_birth=? WHERE studentID=?";
-  var values = [name, address, gender, date_of_birth, studentID];
+  var sql = "UPDATE students SET name=?, address=?, gender=?, date_of_birth=?, email=? WHERE studentID=?";
+  var values = [name, address, gender, date_of_birth, studentID, email];
   con.query(sql, values, function (err, result) {
     if (err) throw err;
     console.log("1 record updated");
@@ -327,7 +320,9 @@ app.post('/students/search', function(req,res){
           'name':rows[i].name,
           'address':rows[i].address,
           'gender':gender(rows[i].gender),
-          'date_of_birth':formatDatem(rows[i].date_of_birth)
+          'date_of_birth':formatDatem(rows[i].date_of_birth),
+          'email':rows[i].email,
+          'date_time':formatDatem(rows[i].date_time)
         }
         // Add object into array
         studentList.push(student);
