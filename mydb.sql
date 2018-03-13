@@ -28,8 +28,9 @@ CREATE TABLE `students` (
   `address` varchar(255) NOT NULL,
   `gender` enum('F','M') DEFAULT NULL,
   `date_of_birth` date DEFAULT NULL,
+  `date_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`studentID`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=18002 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +39,7 @@ CREATE TABLE `students` (
 
 LOCK TABLES `students` WRITE;
 /*!40000 ALTER TABLE `students` DISABLE KEYS */;
-INSERT INTO `students` VALUES (1,'Anindi','Jl. Magelang no. 25 Yogyakarta','F','1999-09-09'),(2,'Dio','Jl. Colombo no. 17 Yogyakarta','M','1999-08-21'),(3,'Ratna','Jl. Laksda Adi Sucipto no. 8','F','1999-03-11'),(4,'Dewi','Jl. Afandi no. 121','F','1999-05-24'),(5,'Eva','Jl Wiroto','F','2018-03-04'),(6,'Angga','Jl Mangga','M','2018-03-01'),(7,'Roy','Jl Kayu Manis','F','2018-01-10'),(8,'Chucky Tri','Jl Hollywood','M','1999-01-11'),(9,'Rio','Jl. Afrika','M','1999-02-22'),(10,'Stephen Y','Jl Cengkeh','M','1999-09-09'),(11,'Annabelle','Jl Keramat','F','1999-02-22'),(12,'Nandini','Jl. Jakarta','F','1999-01-20');
+INSERT INTO `students` VALUES (14,'Annabelle Sucipto','Jl Mangkubumi no. 29','F','1999-12-13','2018-01-12 00:00:00'),(16,'Diana Sinta W','Jl Gejayan 09 Yogyakarta','F','1999-02-22','2018-01-19 00:00:00'),(17,'Amanda Putri','Jl Arum Manis','F','1999-08-08','2018-02-20 00:00:00'),(18,'Alvaro Putra','Jl Gejayan 112','M','1999-09-19','2018-03-11 20:28:18'),(20,'Anindi Pratiwi','Jl. Magelang no. 25 Yogyakarta','F','1999-09-09','2018-03-12 00:00:00'),(21,'Dion Rumbaka','Jl. Colombo no. 17 Yogyakarta','M','1999-08-21','2018-03-13 10:16:47'),(22,'Ratna Sari Dewi','Jl. Laksda Adi Sucipto no. 8','F','1999-03-11','2018-03-13 10:17:18'),(23,'Angga Maulana','Jl Mangga no 12 Yogyakarta','M','1999-01-12','2018-03-13 10:17:45'),(18001,'Evania K','Puri Widya Yogyakarta','F','1999-09-29','2018-03-13 10:26:28');
 /*!40000 ALTER TABLE `students` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-08  8:50:05
+-- Dump completed on 2018-03-13 11:03:08
