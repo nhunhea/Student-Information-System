@@ -61,10 +61,11 @@ html
             button.btn.btn-outline-light.text-dark(type='button')
               a(href='/students/insert') Add Student
               |  |
-    .container.card
+    .container.card.text-center
       // button#Get_Graph(onclick='gData(); return false') Get Graph
         button
           canvas#clients(width='500', height='400')
       h1 Statistics
-      #piechart(style='width: 900px; height: 500px;')
-      #curve_chart(style='width: 900px; height: 500px')
+      div.text-center
+        #piechart(style='width: 600px; height: auto;')
+        #curve_chart(style='width: 600px; height: auto')
