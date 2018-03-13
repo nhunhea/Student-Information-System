@@ -23,7 +23,7 @@ html
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {
-      var data = google.visualization.arrayToDataTable(!{data});
+      var data = google.visualization.arrayToDataTable(!{data1});
       var options = {
       title: 'Gender Ratio'
       };
@@ -34,13 +34,7 @@ html
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {
-      var data = google.visualization.arrayToDataTable([
-      ['list.month', 'list.freq'],
-      ['January', 1],
-      ['February', 2],
-      ['March', 3],
-      ['April', 2]
-      ]);
+      var data = google.visualization.arrayToDataTable(!{data2});
       var options = {
       title: 'Data inserted by year',
       curveType: 'function',

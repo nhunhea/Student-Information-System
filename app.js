@@ -88,7 +88,7 @@ app.get('/students', function(req, res) {
           'address':rows[i].address,
           'gender':gender(rows[i].gender),
           'date_of_birth':formatDatem(rows[i].date_of_birth),
-          'date_time':formatDatem(rows[i].date_time)
+          'date_time':formatDatemg(rows[i].date_time)
         }
         // Add object into array
         studentList.push(student);
@@ -148,10 +148,10 @@ function adapter(x){
   return temp;
 }
 app.get('/students/stat', function(req,res){
-  var list = []; get_gender=[]; get_freq=[]; freq=[]; temp_freq=[]; help=[];
-  //var sql = 'SELECT month(date_time) as month, count(*) as freq FROM students group by month(date_time)';
-  var sql = 'select gender, count(gender) as freq from students GROUP BY gender;';
+  var list = []; get_gender=[]; get_freq=[]; freq=[]; temp_freq=[]; get_month=[]; get_freqs=[]; freqs=[]; temp_freqs=[]; help2=[];
   
+  var sql = 'select gender, count(gender) as freq from students GROUP BY gender;';
+  var sql2 = 'SELECT month(date_time) as month, count(*) as freqs FROM students group by month(date_time)';
   con.query(sql, function(err,rows,fields){
     if (err) {
       console.log (err)
@@ -173,7 +173,63 @@ app.get('/students/stat', function(req,res){
     }
     var help = adapter(temp_freq); 
     console.log(help);
-    res.render('stat', {title: 'Stats List', data: JSON.stringify(help)});
+
+    //getdata for chart line
+    con.query(sql2, function(err,rows,fields){
+      if (err) {
+        console.log (err)
+      }
+      else {
+        get_month.push('month')
+        get_freqs.push('frequents')
+        console.log(rows);
+        for (var j=0; j<rows.length; j++){
+          if (rows[j].month === 1) {
+            get_month.push('January')
+          }
+          else if (rows[j].month === 2) {
+            get_month.push('February')
+          }
+          else if (rows[j].month === 3) {
+            get_month.push('March')
+          }
+          else if (rows[j].month === 4) {
+            get_month.push('April')
+          }
+          else if (rows[j].month === 5) {
+            get_month.push('Mei')
+          }
+          else if (rows[j].month === 6) {
+            get_month.push('June')
+          }
+          else if (rows[j].month === 7) {
+            get_month.push('July')
+          }
+          else if (rows[j].month === 8) {
+            get_month.push('August')
+          }
+          else if (rows[j].month === 9) {
+            get_month.push('September')
+          }
+          else if (rows[j].month === 10) {
+            get_month.push('October')
+          }
+          else if (rows[j].month === 11) {
+            get_month.push('November')
+          }
+          else {
+            get_month.push('December')
+          }
+          get_freqs.push(rows[j].freqs)
+        }
+        temp_freqs.push(get_month, get_freqs)  
+        //console.log(get_freqs);
+        //console.log(get_month);
+      }
+      var help2 = adapter(temp_freqs); 
+      console.log(help2);
+      res.render('stat', {title: 'Stats List', data1: JSON.stringify(help), data2: JSON.stringify(help2)});
+    })
   })
   
   
