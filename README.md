@@ -50,12 +50,13 @@ npm start
 http://localhost:3000/students 
 ```
 
-Validation :
-```
-# Every input must be filled
-```
+## Validation
+Every input must be filled
+## Required
+* npm
+* mysql
 
-Quote of The Day
+## Quote of The Day
 ``` 
 "Kesempurnaan Hanya Milik Allah SWT"
 ```
