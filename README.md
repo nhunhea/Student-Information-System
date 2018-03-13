@@ -51,6 +51,7 @@ http://localhost:3000/students
 ```
 ## Feature
 * Validation `Every input must be filled`
+* CRUD in students table
 * A chart of gender comparison and A chart of date insertion of data
 ## Required
 * npm
