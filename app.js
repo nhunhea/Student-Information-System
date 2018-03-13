@@ -88,6 +88,7 @@ app.get('/students', function(req, res) {
           'address':rows[i].address,
           'gender':gender(rows[i].gender),
           'date_of_birth':formatDatem(rows[i].date_of_birth),
+          'email':rows[i].email,
           'date_time':formatDatem(rows[i].date_time)
         }
         // Add object into array

@@ -22,7 +22,7 @@ block content
             th(scope='col') Name
             th(scope='col') Address
             th(scope='col') Gender
-            th(scope='col') Date of Birth
+            th(scope='col') Email
             th(scope='col') Admission Date
             th Action
         tbody
@@ -33,7 +33,7 @@ block content
                 a(href='/students/'+student.studentID) #{student.name}
               td=student.address
               td=student.gender
-              td=student.date_of_birth
+              td=student.email
               td=student.date_time
               td.d-inline-flex
                 form(action='/students/delete/'+student.studentID method="POST")
