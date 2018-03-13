@@ -49,9 +49,9 @@ npm start
 ``` 
 http://localhost:3000/students 
 ```
-
-## Validation
-Every input must be filled
+## Feature
+* Validation `Every input must be filled`
+* A chart of gender comparison and A chart of date insertion of data
 ## Required
 * npm
 * mysql
