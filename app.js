@@ -87,12 +87,12 @@ app.get('/students', function(req, res) {
           'name':rows[i].name,
           'address':rows[i].address,
           'gender':gender(rows[i].gender),
-          'date_of_birth':formatDatem(rows[i].date_of_birth)
+          'date_of_birth':formatDatem(rows[i].date_of_birth),
+          'date_time':formatDatem(rows[i].date_time)
         }
         // Add object into array
         studentList.push(student);
-    }
-
+      }
     // Render index.pug page using array 
     res.render('index', {title: 'Student List', data: studentList});
     }
@@ -124,6 +124,69 @@ app.post('/students/insert',function(req,res){
   });
 })
 
+function dataAdapter(obj, cols){
+  const chartData=[[...cols]]; //splat operator
+
+  for (row in data){
+    const temp = [];
+    for (prop in cols){
+      temp.push(prop);
+    }
+    chartData.push(temp);
+  }
+}
+
+function adapter(x){
+  var temp = [];
+  for (var i=0; i<x.length; ++i){
+    for (var j=0; j<x[i].length; ++j){
+      if (x[i][j] === undefined) continue;
+      if (temp[j] === undefined) temp [j] = [];
+      temp[j][i] = x[i][j];
+    }
+  }
+  return temp;
+}
+app.get('/students/stat', function(req,res){
+  var list = []; get_gender=[]; get_freq=[]; freq=[]; temp_freq=[]; help=[];
+  //var sql = 'SELECT month(date_time) as month, count(*) as freq FROM students group by month(date_time)';
+  var sql = 'select gender, count(gender) as freq from students GROUP BY gender;';
+  
+  con.query(sql, function(err,rows,fields){
+    if (err) {
+      console.log (err)
+    }
+    else {
+      get_gender.push('gender')
+      get_freq.push('frequents')
+      console.log(rows);
+      for (var j=0; j<rows.length; j++){
+        if (rows[j].gender === 'M') {
+          get_gender.push('Male')
+        } else {
+          get_gender.push('Female')
+        }
+        get_freq.push(rows[j].freq)
+      }
+      temp_freq.push(get_gender, get_freq)  
+      //console.log(get_freq);
+    }
+    var help = adapter(temp_freq); 
+    console.log(help);
+    res.render('stat', {title: 'Stats List', data: JSON.stringify(help)});
+  })
+  
+  
+ 
+    /*const chartData = [['gender', 'freq']];
+    for (rows in list){
+      chartData.push([gender, freq]);
+    }
+    return console.log(chartData);*/
+  
+  //const a = [{foo: 'bar'} ];res.render('stat', {test : JSON.stringify(a)});
+});
+
 app.get('/students/edit',function(req,res){
   res.render('edit');
 });
@@ -146,7 +209,7 @@ app.get('/students/:id', function(req, res) {
 						name: rows[0].name,
             address: rows[0].address,
             gender: rows[0].gender,
-            date_of_birth: formatDatep(rows[0].date_of_birth),
+            date_of_birth: formatDatep(rows[0].date_of_birth)
         })
 		}            
 	});
@@ -178,14 +241,15 @@ app.post('/students/delete/:id', function(req,res){
     res.redirect('/students');
   });
 });
- 
+
 app.post('/students/search', function(req,res){
   var studentList = [];
   var keyword = req.body.keyword;
   var opt = req.body.opt;
   var order = req.body.order;
   
-  var sql = "SELECT * FROM students WHERE "+opt+" LIKE '%"+keyword+"%' ORDER BY "+opt+" "+order+"";
+  if (keyword == null) var sql = "SELECT * FROM students WHERE "+opt+" LIKE '%"+keyword+"%' ORDER BY studentID DESC";
+  else var sql = "SELECT * FROM students WHERE "+opt+" LIKE '%"+keyword+"%' ORDER BY "+opt+" "+order+"";
   //var sql = "SELECT * FROM students WHERE "+opt+" LIKE '%"+keyword+"%'";
   //var sql = "SELECT * FROM students WHERE name LIKE '%Ani%'";
   console.log(sql);

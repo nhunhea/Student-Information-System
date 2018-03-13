@@ -1,0 +1,76 @@
+html
+  head
+    title= 'Statistik'
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js')
+    script(type='text/javascript', src='https://www.gstatic.com/charts/loader.js')
+
+    //script.
+      window.onload = function () {
+        var ctx = document.getElementByid("curve_chart");
+        var myLineChart = new Chart(ctx, {
+          type: 'line',
+          data: !{getlist},
+          options: options
+        }); 
+      }
+    script(type='text/javascript', src='https://www.gstatic.com/charts/loader.js')
+    script(type='text/javascript').
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+      var data = google.visualization.arrayToDataTable(!{data});
+      var options = {
+      title: 'Gender Ratio'
+      };
+      var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+      chart.draw(data, options);
+      }  
+    script(type='text/javascript').
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+      ['list.month', 'list.freq'],
+      ['January', 1],
+      ['February', 2],
+      ['March', 3],
+      ['April', 2]
+      ]);
+      var options = {
+      title: 'Data inserted by year',
+      curveType: 'function',
+      legend: { position: 'bottom' }
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+      chart.draw(data, options);
+      }  
+  body
+    nav.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
+      .container
+        // Brand and toggle get grouped for better mobile display
+        .navbar-header
+          .btn-group
+            button.btn.btn-outline-light.text-dark(type='button')
+              a(href='#') Home
+              |  |
+            button.btn.btn-outline-light.text-dark(type='button')
+              a(href='/students/stat') Statistik
+              |  |
+            button.btn.btn-outline-light.text-dark(type='button')
+              a(href='/students') Students List
+              |  |
+            button.btn.btn-outline-light.text-dark(type='button')
+              a(href='/students/insert') Add Student
+              |  |
+    .container.card
+      // button#Get_Graph(onclick='gData(); return false') Get Graph
+        button
+          canvas#clients(width='500', height='400')
+      h1 Statistics
+      #piechart(style='width: 900px; height: 500px;')
+      #curve_chart(style='width: 900px; height: 500px')

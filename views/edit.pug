@@ -1,28 +1,36 @@
-html
-  head
-    title  test 
-    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
-  body
-    h1='Edit Student'
-    form(action='/students/edit', method='POST')
-      fieldset
+extends layout
+
+block content
+  .container.card
+    .row
+      .col-sm-12
+        form.form-inline(action='/students/search', method='POST')
+          input.form-control.col.pag(type='text', name='keyword', placeholder='Search..', required='true')
+          select.custom-select.col.pag(name='order')
+            option#order(value='asc') Ascending
+            option#order(value='desc') Descending
+          select.custom-select.col.pag(name='opt')
+            option#opt(value='name') Name
+            option#opt(value='address') Address
+          button.btn.btn-info.col.pag(type='submit') Search
+    form.card-body(action='/students/edit', method='POST')
+      .form-group.row
         input#name(type='hidden', name='studentID', value=studentID)
-        br
-        label(for='name') Name: 
-        input#name(type='text', name='name', value=name)
-        br
-        label(for='address') Address: 
-        input#address(type='text', name='address', value=address)
-        br
-        label(for='gender') Gender: 
-        input#gender(type='radio', size='25', name='gender', value='M', checked=gender=='M')
-        i.helper
-        | Male
-        input#gender(type='radio', name='gender', value='F', checked=gender=='F')
-        i.helper
-        | Female
-        br
-        label(for='date_of_birth') Date Of Birth: 
-        input#date_of_birth(type='date', name='date_of_birth', value=date_of_birth)
-        br
-        input(type='submit', value='Edit Student')
+        label.col-sm-4(for='name') Name: 
+        input#name.form-control.col-sm-8(type='text', name='name', value=name, required='true')
+      .form-group.row
+        label.col-sm-4(for='address') Address: 
+        input#address.form-control.col-sm-8(type='text', name='address', value=address, required='true')
+      .form-group.row
+        label.col-sm-4(for='gender') Gender: 
+        label.radio-inline.col
+          input#gender(type='radio', name='gender', value='M', checked=gender=='M')
+          |  Male
+        label.radio-inline.col
+          input#gender(type='radio', name='gender', value='F', checked=gender=='F')
+          |  Female
+      .form-group.row
+        label.col-sm-4(for='date_of_birth') Date Of Birth: 
+        input#date_of_birth.form-control.col-sm-8(type='date', name='date_of_birth', value=date_of_birth, required='true')
+      .form-group.row
+        button.btn.btn-info.col.pagb(type='submit') Edit Student
