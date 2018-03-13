@@ -257,8 +257,8 @@ app.get('/students/:id', function(req, res) {
 						name: rows[0].name,
             address: rows[0].address,
             gender: rows[0].gender,
-            email:rows[0].email,
-            date_of_birth: formatDatep(rows[0].date_of_birth)
+            date_of_birth: formatDatep(rows[0].date_of_birth),
+            email:rows[0].email
         })
 		}            
 	});
@@ -270,11 +270,11 @@ app.post('/students/edit',function(req,res){
   var name=req.body.name;
   var address=req.body.address;
   var gender=req.body.gender;
-  var email=req.body.email;
   var date_of_birth=req.body.date_of_birth;
+  var email=req.body.email;
 
   var sql = "UPDATE students SET name=?, address=?, gender=?, date_of_birth=?, email=? WHERE studentID=?";
-  var values = [name, address, gender, date_of_birth, studentID, email];
+  var values = [name, address, gender, date_of_birth, email, studentID];
   con.query(sql, values, function (err, result) {
     if (err) throw err;
     console.log("1 record updated");
