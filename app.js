@@ -109,7 +109,10 @@ app.get('/login',function(req,res){
   res.render('login', {'message' :req.flash('message')});
 });
 
-
+function isAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) return next();
+  res.redirect('/login');
+}
 
 function formatDatem(date) {
   var d = new Date(date),
@@ -143,7 +146,7 @@ function gender(studentGender){
   }
 }
 
-app.get('/students', function(req, res) {
+app.get('/students', isAuthenticated, function(req, res) {
   var studentList = [];
 
   // Do the query to get data.
@@ -175,30 +178,40 @@ app.get('/students', function(req, res) {
   });
 });
 
-app.get('/students/insert',function(req,res){
+app.get('/students/insert',isAuthenticated, function(req,res){
   res.render('insert');
 });
 
+function dobval (){
+  var date_of_birth = req.body.date_of_birth;
+  var today = formatDatep( new Date ());
+
+  if (date_of_birth >= today){
+    console.log("Data is invalid");
+    return false;
+  } else {
+    return true;
+  }
+}
+
 app.post('/students/insert',function(req,res){
-  var name=req.body.name;
-  var address=req.body.address;
-  var gender=req.body.gender;
-  var date_of_birth=req.body.date_of_birth;
-  var email=req.body.email;
+ // if (dobval == true ){
+    var name = req.body.name;
+    var address = req.body.address;
+    var gender = req.body.gender;
+    var date_of_birth = req.body.date_of_birth;
+    var email = req.body.email;
 
-  //res.write('You sent the name "' + req.body.name+'".\n');
-
-  //con.connect(function(err) {
-  //if (err) throw err;
-  var sql = "INSERT INTO students (name, address, gender, date_of_birth, email) VALUES ('"+name+"', '"+address+"','"+gender+"','"+date_of_birth+"','"+email+"')";
-  con.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log("1 record inserted");
-    //res.end();
-    //res.send('index');
-  //});
-  res.redirect('/students');
-  });
+    var sql = "INSERT INTO students (name, address, gender, date_of_birth, email) VALUES ('"+name+"', '"+address+"','"+gender+"','"+date_of_birth+"','"+email+"')";
+    con.query(sql, function (err, result) {
+      if (err) throw err;
+      console.log("1 record inserted");
+    res.redirect('/students');
+    });
+  //} else {
+   // console.log("Date is invalid");
+   // res.render('insert');
+ // }
 })
 
 function dataAdapter(obj, cols){
@@ -224,7 +237,7 @@ function adapter(x){
   }
   return temp;
 }
-app.get('/students/stat', function(req,res){
+app.get('/students/stat', isAuthenticated, function(req,res){
   var list = []; get_gender=[]; get_freq=[]; freq=[]; temp_freq=[]; get_month=[]; get_freqs=[]; freqs=[]; temp_freqs=[]; help2=[];
   
   var sql = 'select gender, count(gender) as freq from students GROUP BY gender;';
@@ -310,7 +323,7 @@ app.get('/students/stat', function(req,res){
   })
 });
 
-app.get('/students/edit',function(req,res){
+app.get('/students/edit', isAuthenticated, function(req,res){
   res.render('edit');
 });
 
@@ -408,8 +421,6 @@ app.post('/students/search', function(req,res){
     }
   });
 });
-
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
