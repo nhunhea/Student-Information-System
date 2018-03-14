@@ -6,12 +6,19 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
-
+var flash = require('connect-flash');
+var crypto = require('crypto');
+var passport          = require('passport');
+var LocalStrategy     = require('passport-local').Strategy;
+// var connection        = require('./lib/dbconn');
+var sess              = require('express-session');
+var Store             = require('express-session').Store;
+//var BetterMemoryStore = require(__dirname + '/memory');
+var BetterMemoryStore = require('session-memory-store')(sess);
 var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
-
 var mysql = require('mysql');
 
 var con = mysql.createConnection({
@@ -35,6 +42,74 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
+var store = new BetterMemoryStore({ expires: 60 * 60 * 1000, debug: true });
+
+app.use(sess({
+  name: 'JSESSION',
+  secret: 'MYSECRETISVERYSECRET',
+  store:  store,
+  resave: true,
+  saveUninitialized: true
+}));
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use("local", new LocalStrategy({
+      usernameField: "username",
+      passwordField: "password",
+      passReqToCallback: true //passback entire req to call back
+    },
+    function(req, username, password, done) {
+      if (!username || !password) { 
+        return done(null,false,req.flash("message", "All fields are required."));
+      }
+
+      var salt = "7fa73b47df808d36c5fe328546ddef8b9011b2c6";
+      
+      con.query("select * from user where username = ?", [username], function(err, rows) {
+         // console.log(err);
+          console.log(rows);
+
+          if (err) return done(req.flash("message", err));
+
+          if (!rows.length) { return done(null, false, req.flash("message", "Invalid username or password."));
+          }
+
+          salt = salt + "" + password;
+
+          var encPassword = crypto.createHash("sha1").update(salt).digest("hex");
+
+          var dbPassword = rows[0].password;
+          
+          if (!(dbPassword == encPassword)) {
+            return done(null,false,req.flash("message", "Invalid username or password."));
+          }
+
+          return done(null, rows[0]);
+      });
+    })
+);
+
+passport.serializeUser(function(user, done) {
+  done(null, user.userID);
+});
+
+passport.deserializeUser(function(id, done) {
+  con.query("select * from user where userID = " + id, function(err,rows) {
+    done(err, rows[0]);
+  });
+});
+
+app.post('/login', passport.authenticate('local', { successRedirect: '/students', failureRedirect: '/login', failureFlash: true }), function(req, res, info){
+  res.render('index', {'message' :req.flash('message')});
+});
+
+app.get('/login',function(req,res){
+  res.render('login', {'message' :req.flash('message')});
+});
+
+
 
 function formatDatem(date) {
   var d = new Date(date),
@@ -333,6 +408,8 @@ app.post('/students/search', function(req,res){
     }
   });
 });
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
