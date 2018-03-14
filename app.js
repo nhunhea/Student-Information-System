@@ -40,8 +40,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
+//app.use('/', index);
 app.use('/users', users);
+
 var store = new BetterMemoryStore({ expires: 60 * 60 * 1000, debug: true });
 
 app.use(sess({
@@ -101,17 +102,17 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
-app.post('/login', passport.authenticate('local', { successRedirect: '/students', failureRedirect: '/login', failureFlash: true }), function(req, res, info){
+app.post('/login', passport.authenticate('local', { successRedirect: '/students', failureRedirect: '/', failureFlash: true }), function(req, res, info){
   res.render('index', {'message' :req.flash('message')});
 });
 
-app.get('/login',function(req,res){
+app.get('/',function(req,res){
   res.render('login', {'message' :req.flash('message')});
 });
 
 function isAuthenticated(req, res, next) {
   if (req.isAuthenticated()) return next();
-  res.redirect('/login');
+  res.redirect('/');
 }
 
 function formatDatem(date) {
