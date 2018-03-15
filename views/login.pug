@@ -25,10 +25,12 @@ html(lang='en')
                 .input-group-addon(style='width: 2.6rem')
                   i.fas.fa-user
                 input#username.form-control(type='text', name='username', required='', autofocus='')
-          //.col-md-3
+          .col-md-3
             .form-control-feedback
               span.text-danger.align-middle
-                i.fa.fa-close
+                - if (message){
+                    p #{message} 
+                - }  
         .row
           .col-md-3
           .col-md-6

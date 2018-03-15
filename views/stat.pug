@@ -39,16 +39,25 @@ html
   body
     //nav.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
     .container
-      .navbar-header
-        .btn-group
-          button.btn.btn-outline-light.text-dark(type='button')
-            a(href='#') Home
-          button.btn.btn-outline-light.text-dark(type='button')
-            a(href='/students/stat') Statistik
-          button.btn.btn-outline-light.text-dark(type='button')
-            a(href='/students') Students List
-          button.btn.btn-outline-light.text-dark(type='button')
-            a(href='/students/insert') Add Student
+      nav.navbar.fixed-top.navbar-expand-lg.navbar-dark.bg-info
+        a.navbar-brand(href='#') STudent DB
+        button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarTogglerDemo02', aria-controls='navbarTogglerDemo02', aria-expanded='false', aria-label='Toggle navigation')
+          span.navbar-toggler-icon
+        #navbarTogglerDemo02.collapse.navbar-collapse
+          ul.navbar-nav.mr-auto.mt-2.mt-lg-0.d-flex
+            li.nav-item.active
+              a.nav-link(href='/students')
+                | Home 
+                span.sr-only (current)
+            li.nav-item
+              a.nav-link(href='/students/stat') Statistics
+            li.nav-item
+              a.nav-link(href='/students') Students List
+            li.nav-item
+              a.nav-link(href='/students/insert') Add Students
+          form.form-inline.my-2.my-lg-0
+            .nav-item.bg-light.text-white
+              a.nav-link(href='/logout') Logout
     
     .container.card.text-center 
       h1=title

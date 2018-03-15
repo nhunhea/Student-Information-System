@@ -17,6 +17,7 @@ var Store             = require('express-session').Store;
 var BetterMemoryStore = require('session-memory-store')(sess);
 var index = require('./routes/index');
 var users = require('./routes/users');
+var alert = require('alert-node');
 
 var app = express();
 var mysql = require('mysql');
@@ -63,7 +64,7 @@ passport.use("local", new LocalStrategy({
     },
     function(req, username, password, done) {
       if (!username || !password) { 
-        return done(null,false,req.flash("message", "All fields are required."));
+        return done(null, false, req.flash("message", "All fields are required."));
       }
 
       var salt = "7fa73b47df808d36c5fe328546ddef8b9011b2c6";
@@ -393,8 +394,9 @@ app.post('/students/search', function(req,res){
   var opt = req.body.opt;
   var order = req.body.order;
   
-  if (order == null) var sql = "SELECT * FROM students WHERE "+opt+" LIKE '%"+keyword+"%' ORDER BY studentID DESC";
-  else var sql = "SELECT * FROM students WHERE "+opt+" LIKE '%"+keyword+"%' ORDER BY "+opt+" "+order+"";
+  //if (keyword == null) var sql = "SELECT * FROM students WHERE "+opt+" LIKE '%"+keyword+"%' ORDER BY studentID DESC";
+  //else 
+  var sql = "SELECT * FROM students WHERE "+opt+" LIKE '%"+keyword+"%' ORDER BY "+opt+" "+order+"";
   //var sql = "SELECT * FROM students WHERE "+opt+" LIKE '%"+keyword+"%'";
   //var sql = "SELECT * FROM students WHERE name LIKE '%Ani%'";
   console.log(sql);
