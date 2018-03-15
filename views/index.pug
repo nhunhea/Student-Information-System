@@ -15,32 +15,33 @@ block content
             option#opt(value='address') Address
           button.btn.btn-info.col.pag(type='submit') Search
     .row
-      table.table
-        thead.thead-dark
-          tr
-            th(scope='col') ID
-            th(scope='col') Name
-            th(scope='col') Address
-            th(scope='col') Gender
-            th(scope='col') Email
-            th(scope='col') Admission Date
-            th Action
-        tbody
-          for student in data
-            tr
-              td=student.studentID
-              td
-                a(href='/students/'+student.studentID) #{student.name}
-              td=student.address
-              td=student.gender
-              td=student.email
-              td=student.date_time
-              td.d-inline-flex
-                form(action='/students/'+student.studentID) 
-                  input.btn.btn-primary.pagb(type="submit" value="Edit")
-                form(action='/students/delete/'+student.studentID method="POST")
-                  input.btn.btn-danger.pagb(type="submit" value="Delete" onClick="return confirm_delete()")
-                
+      //.col-sm-12
+      div.table-responsive
+        table.table
+          thead.thead-dark
+            tr.text-center
+              th(scope='col') ID
+              th(scope='col') Name
+              th(scope='col') Address
+              th(scope='col') Gender
+              th(scope='col') Email
+              th(scope='col') Admission Date
+              th Action
+          tbody
+            for student in data
+              tr
+                td(scope='row')=student.studentID
+                td
+                  a(href='/students/'+student.studentID) #{student.name}
+                td=student.address
+                td=student.gender
+                td=student.email
+                td=student.date_time
+                td.d-inline-flex
+                  form(action='/students/'+student.studentID) 
+                    input.btn.btn-primary.pagb(type="submit" value="Edit")
+                  form(action='/students/delete/'+student.studentID method="POST")
+                    input.btn.btn-danger.pagb(type="submit" value="Delete" onClick="return confirm_delete()")           
     .row
       .clearfix
         .hint-text

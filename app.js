@@ -74,13 +74,12 @@ passport.use("local", new LocalStrategy({
 
           if (err) return done(req.flash("message", err));
 
-          if (!rows.length) { return done(null, false, req.flash("message", "Invalid username or password."));
-          }
+          if (!rows.length) {
+            return done(null, false, req.flash("message", "Invalid username or password."));
+           }
 
           salt = salt + "" + password;
-
           var encPassword = crypto.createHash("sha1").update(salt).digest("hex");
-
           var dbPassword = rows[0].password;
           
           if (!(dbPassword == encPassword)) {

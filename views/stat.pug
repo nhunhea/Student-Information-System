@@ -10,28 +10,32 @@ html
     script(type='text/javascript', src='https://www.gstatic.com/charts/loader.js')
     script(type='text/javascript').
       google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
-      function drawChart() {
-      var data = google.visualization.arrayToDataTable(!{data1});
-      var options = {
-      title: 'Gender Ratio'
-      };
-      var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-      chart.draw(data, options);
+      google.charts.setOnLoadCallback(drawChart1);
+      google.charts.setOnLoadCallback(drawChart2);
+      function drawChart1() {
+        var data = google.visualization.arrayToDataTable(!{data1});
+        var options = {
+          title: 'Gender Ratio'
+        };
+        var chart1 = new google.visualization.PieChart(document.getElementById('piechart'));
+        chart1.draw(data, options);
       }  
-    script(type='text/javascript').
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
-      function drawChart() {
-      var data = google.visualization.arrayToDataTable(!{data2});
-      var options = {
-      title: 'Data inserted by year',
-      curveType: 'function',
-      legend: { position: 'bottom' }
-      };
-      var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-      chart.draw(data, options);
-      }  
+
+      function drawChart2() {
+        var data = google.visualization.arrayToDataTable(!{data2});
+        var options = {
+          title: 'Data inserted by year',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+        var chart2 = new google.visualization.LineChart(document.getElementById('curve_chart'));
+        chart2.draw(data, options);
+      }
+
+      $(window).resize(function(){
+        drawChart1();
+        drawChart2();
+      });  
   body
     //nav.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
     .container
@@ -45,8 +49,10 @@ html
             a(href='/students') Students List
           button.btn.btn-outline-light.text-dark(type='button')
             a(href='/students/insert') Add Student
-    .container.card.text-center
+    
+    .container.card.text-center 
       h1 Statistics
-      div.text-center
-        #piechart(style='width: 600px; height: auto;')
-        #curve_chart(style='width: 600px; height: auto')
+      div.col-sm-12
+        #piechart.chart.text-center
+        #curve_chart.chart
+  
