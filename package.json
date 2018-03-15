@@ -12,6 +12,7 @@
     "crypto": "^1.0.1",
     "debug": "~2.6.9",
     "express": "~4.15.5",
+    "express-passport-logout": "^0.1.0",
     "express-session": "^1.15.6",
     "express-validator": "^5.0.3",
     "memory": "0.0.3",

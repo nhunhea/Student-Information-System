@@ -115,6 +115,13 @@ function isAuthenticated(req, res, next) {
   res.redirect('/');
 }
 
+var logout = require('express-passport-logout');
+ 
+app.get('/logout', function(req,res){
+  req.logout();
+  res.redirect('/');
+});
+
 function formatDatem(date) {
   var d = new Date(date),
       month = '' + (d.getMonth() + 1),
