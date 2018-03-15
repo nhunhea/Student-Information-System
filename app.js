@@ -186,7 +186,7 @@ app.get('/students', isAuthenticated, function(req, res) {
 });
 
 app.get('/students/insert',isAuthenticated, function(req,res){
-  res.render('insert');
+  res.render('insert', {title: 'Add Student'});
 });
 
 function dobval (){
@@ -325,13 +325,13 @@ app.get('/students/stat', isAuthenticated, function(req,res){
       }
       var help2 = adapter(temp_freqs); 
       console.log(help2);
-      res.render('stat', {title: 'Stats List', data1: JSON.stringify(help), data2: JSON.stringify(help2)});
+      res.render('stat', {title: 'Statistics', data1: JSON.stringify(help), data2: JSON.stringify(help2)});
     })
   })
 });
 
 app.get('/students/edit', isAuthenticated, function(req,res){
-  res.render('edit');
+  res.render('edit', {title: 'Edit Student'});
 });
 
 app.get('/students/:id', function(req, res) {
@@ -424,7 +424,7 @@ app.post('/students/search', function(req,res){
     }
 
     // Render index.pug page using array 
-    res.render('index', {title: 'Student List', data: studentList});
+    res.render('index', {title: 'Students List', data: studentList});
     }
   });
 });

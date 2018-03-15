@@ -7,7 +7,7 @@ html(lang='en')
     link#bootstrap-css(href='//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css', rel='stylesheet')
     script(src='//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js')
     script(src='//code.jquery.com/jquery-1.11.1.min.js')
-    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css')
+    script(defer='', src='https://use.fontawesome.com/releases/v5.0.8/js/all.js')
   body
     .container
       form.form-horizontal(role='form', method='POST', action='/login')
@@ -23,13 +23,12 @@ html(lang='en')
               label.sr-only(for='username') Username
               .input-group.mb-2.mr-sm-2.mb-sm-0
                 .input-group-addon(style='width: 2.6rem')
-                  i.fa.fa-at
+                  i.fas.fa-user
                 input#username.form-control(type='text', name='username', required='', autofocus='')
-          .col-md-3
+          //.col-md-3
             .form-control-feedback
               span.text-danger.align-middle
                 i.fa.fa-close
-                |  Example error message
         .row
           .col-md-3
           .col-md-6
