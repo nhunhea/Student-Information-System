@@ -15,7 +15,8 @@ html
       function drawChart1() {
         var data = google.visualization.arrayToDataTable(!{data1});
         var options = {
-          title: 'Gender Ratio'
+          title: 'Gender Ratio',
+          'height':500
         };
         var chart1 = new google.visualization.PieChart(document.getElementById('piechart'));
         chart1.draw(data, options);
@@ -24,11 +25,17 @@ html
       function drawChart2() {
         var data = google.visualization.arrayToDataTable(!{data2});
         var options = {
-          title: 'Data inserted by year',
+          title: 'Data inserted by month',
           curveType: 'function',
-          legend: { position: 'bottom' }
+          legend: { position: 'bottom' },
+          vAxis: {minValue: 1},
+          'height':500
         };
-        var chart2 = new google.visualization.LineChart(document.getElementById('curve_chart'));
+        /*for (i = 0; i < data.getNumberOfRows(); i++) {
+          if ( data.getValue(1, i) == null )
+            data.setValue(1, i) = 0
+        }*/
+        var chart2 = new google.visualization.LineChart(document.getElementById('line_chart'));
         chart2.draw(data, options);
       }
 
@@ -50,7 +57,7 @@ html
                 | Home 
                 span.sr-only (current)
             li.nav-item
-              a.nav-link(href='/students/stat') Statistics
+              a.nav-link(href='/students/stat/2018') Statistics
             li.nav-item
               a.nav-link(href='/students') Students List
             li.nav-item
@@ -63,5 +70,12 @@ html
       h1=title
       div.col-sm-12
         #piechart.chart.text-center
-        #curve_chart.chart
+        .dropdown
+          button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
+            | Years
+          .dropdown-menu
+            a.dropdown-item(href='/students/stat/2016') 2016
+            a.dropdown-item(href='/students/stat/2017') 2017
+            a.dropdown-item(href='/students/stat/2018') 2018
+        #line_chart.chart
   

@@ -17,7 +17,6 @@ var Store             = require('express-session').Store;
 var BetterMemoryStore = require('session-memory-store')(sess);
 var index = require('./routes/index');
 var users = require('./routes/users');
-var alert = require('alert-node');
 
 var app = express();
 var mysql = require('mysql');
@@ -106,8 +105,10 @@ app.post('/login', passport.authenticate('local', { successRedirect: '/students'
   res.render('index', {'message' :req.flash('message')});
 });
 
-app.get('/',function(req,res){
-  res.render('login', {'message' :req.flash('message')});
+app.get('/',function(req,res) {
+  if (req.isAuthenticated ()){
+    res.redirect('/students');
+  } else res.render('login', {'message' :req.flash('message')});
 });
 
 function isAuthenticated(req, res, next) {
@@ -245,11 +246,11 @@ function adapter(x){
   }
   return temp;
 }
-app.get('/students/stat', isAuthenticated, function(req,res){
+app.get('/students/stat/:year', isAuthenticated, function(req,res){
   var list = []; get_gender=[]; get_freq=[]; freq=[]; temp_freq=[]; get_month=[]; get_freqs=[]; freqs=[]; temp_freqs=[]; help2=[];
   
   var sql = 'select gender, count(gender) as freq from students GROUP BY gender;';
-  var sql2 = 'SELECT month(date_time) as month, count(*) as freqs FROM students group by month(date_time)';
+  var sql2 = 'SELECT month(date_time) as month, count(*) as freqs FROM students WHERE year(date_time)='+[req.params.year]+' group by month(date_time)';
   con.query(sql, function(err,rows,fields){
     if (err) {
       console.log (err)
@@ -274,22 +275,43 @@ app.get('/students/stat', isAuthenticated, function(req,res){
 
     //getdata for chart line
     con.query(sql2, function(err,rows,fields){
+      //var rows = new Array(12);
       if (err) {
         console.log (err)
       }
       else {
-        get_month.push('month')
-        get_freqs.push('frequents')
+        get_month.push('month', 'January', 'February', 'March', 'April', 'Mei', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+        get_freqs.push('frequents',0,0,0,0,0,0,0,0,0,0,0,0);
         console.log(rows);
+        for(var i=0; i< rows.length; i++){
+          var months = rows[i].month;
+          //this is so soooooooooooo
+          get_freqs.fill(rows[i].freqs, months, (months+1));
+        }
+        /*if (rows.length < 12) {
+          for (var j=0; j < 12; j++){
+            //get_freqs.push(rows[j].freqs);
+            get_freqs.push(0);
+          }
+        }
+        /*else {
+          for (var j=0; j<rows.length; j++){
+            get_freqs.push(rows[j].freqs);
+          }
+        }
         for (var j=0; j<rows.length; j++){
+          //get_month.push(month);
           if (rows[j].month === 1) {
-            get_month.push('January')
+            //get_month.push('January');
+            get_freqs.push(rows[j].freqs);
           }
           else if (rows[j].month === 2) {
-            get_month.push('February')
+            //get_month.push('February')
+            get_freqs.push(rows[j].freqs);
           }
           else if (rows[j].month === 3) {
-            get_month.push('March')
+            //get_month.push('March')
+            get_freqs.push(rows[j].freqs);
           }
           else if (rows[j].month === 4) {
             get_month.push('April')
@@ -318,11 +340,14 @@ app.get('/students/stat', isAuthenticated, function(req,res){
           else {
             get_month.push('December')
           }
-          get_freqs.push(rows[j].freqs)
-        }
-        temp_freqs.push(get_month, get_freqs)  
-        //console.log(get_freqs);
-        //console.log(get_month);
+          //get_freqs.push(rows[j].freqs);
+        }*/
+
+
+      
+        temp_freqs.push(get_month, get_freqs)
+        console.log(get_freqs);
+        console.log(get_month);
       }
       var help2 = adapter(temp_freqs); 
       console.log(help2);
