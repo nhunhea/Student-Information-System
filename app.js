@@ -599,9 +599,9 @@ app.post('/reset/:token', function(req, res, rows){
     to: user_email,
     from: 'passwordrchanged-noreply@demo.com',
     subject: 'Password Changed',
-    text: 'Dear, '+ user_email +'.\n\n' +
+    text: 'Dear, '+ username +'.\n\n' +
       'As you requested, your password has now been reset. \n Your new details are as follows: \n' +
-      'Email : ' + user_email + ' \n Password : ' + password + '\n\n' +
+      'Username : ' + username + ' \n Email : ' + user_email + ' \n Password : ' + password + '\n\n' +
       'Thankyou. \n'
   };
 
