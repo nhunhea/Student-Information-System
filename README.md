@@ -53,6 +53,10 @@ http://localhost:3000/students
 * Validation `Every input must be filled`
 * CRUD in students table
 * A chart of gender comparison and A chart of date insertion of data
+* Login and Logout for admin
+* Add user admin
+* authenticated page
+* forgot password
 ## Required
 * npm
 * mysql
