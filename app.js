@@ -240,34 +240,30 @@ app.post('/users/insert', isAuthenticated, function(req,res){
      var user_email = req.body.user_email;
  
      var sql = "INSERT INTO users (username, password, user_email) VALUES ('"+username+"', sha1('7fa73b47df808d36c5fe328546ddef8b9011b2c6"+password+"'),'"+user_email+"')";
-     var sql1 = "SELECT * FROM users WHERE username = ?"
-     var sql2 = "SELECT * FROM users WHERE user_email = ?";
+     var sql1 = "SELECT username FROM users WHERE username = ?"
+     var sql2 = "SELECT user_email FROM users WHERE user_email = ?";
      con.query(sql1, username, function(err, rows, fields) {
       if (err) throw err
       if(rows.length > 0) {
         alert('Username already registered !');
         console.log('Username already registered !');
 			} else {
-        con.query(sql, function(err, res) {
-          if (err) throw err;
-          console.log("User : 1 record inserted");
-				 });
-				 res.redirect('/user_admin');
+        con.query(sql2, user_email, function(err, rows, fields) {
+          if (err) throw err
+          if(rows.length > 0) {
+            alert('Email already registered !');
+            console.log('Email already registered !');
+          } else {
+            con.query(sql, function(err, res) {
+              if (err) throw err;
+              console.log("User : 1 record inserted");
+             });
+             res.redirect('/user_admin');
+          }
+        });
       }
     });
-    con.query(sql2, user_email, function(err, rows, fields) {
-      if (err) throw err
-			if(rows.length > 0) {
-        alert('Email already registered !');
-        console.log('Email already registered !');
-			} else {
-        con.query(sql, function(err, res) {
-          if (err) throw err;
-          console.log("User : 1 record inserted");
-				 });
-				 res.redirect('/user_admin');
-      }
-    });
+    
      /*con.query(sql, function (err, result) {
        if (err) throw err;
        console.log("User : 1 record inserted");
