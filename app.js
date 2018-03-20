@@ -499,9 +499,10 @@ app.post('/forgot', function(req, res, next) {
     function(token, done) {
       console.log(token);
       con.query('select * from users where user_email=?', email, function(err, rows) {
-        if (rows.length <= 0) {
+        if (rows.length == 0) {
           req.flash('error', 'No account with that email address exists.');
-          return res.redirect('/forgot');
+          res.render('forgot', {'error': req.flash('error')})
+          //return res.redirect('/forgot');
         }
 
         var resetToken = token;
@@ -509,10 +510,13 @@ app.post('/forgot', function(req, res, next) {
         console.log(resetExpires);
         var reset = {token: resetToken, expired: resetExpires}
 
-        con.query("update users SET ? where user_email='"+email+"' ", [reset], function(err) {
-          done(err, token, rows);
-          console.log(rows);
-        });
+        if (rows.length > 0) {
+          con.query("update users SET ? where user_email='"+email+"' ", [reset], function(err) {
+            done(err, token, rows);
+            console.log(rows);
+          });
+        }
+        
       });
     },
     function(token, rows, done) {
@@ -523,8 +527,9 @@ app.post('/forgot', function(req, res, next) {
           pass: '!!! YOUR SENDGRID PASSWORD !!!'
         }
       });*/
-      console.log(rows[0].user_email);
-      var mailOptions = {
+      //console.log(rows[0].user_email);
+      if (rows.length > 0) {
+        var mailOptions = {
         to: rows[0].user_email,
         from: 'passwordreset@demo.com',
         subject: 'Node.js Password Reset',
@@ -536,11 +541,14 @@ app.post('/forgot', function(req, res, next) {
   
       sgMail.send(mailOptions, function(err) {
         req.flash('info', 'An e-mail has been sent to ' + rows[0].user_email + ' with further instructions.');
+        
         done(err, 'done');
       });
+      }
     }
   ], function(err) {
     if (err) return next(err);
+    res.render('forgot', {'info': req.flash('info')})
     res.redirect('/forgot');
   });
 });
@@ -570,13 +578,13 @@ app.get('/reset/:token', function(req, res) {
   });
 });
 
-app.post('/reset/:token', function(req, res){
+app.post('/reset/:token', function(req, res, rows){
   var username = req.body.username;
   var password = req.body.password;
   var password2 = req.body.conpassword;
   var user_email = req.body.user_email;
 
-  var sql = "UPDATE users SET password=sha1('7fa73b47df808d36c5fe328546ddef8b9011b2c6"+password+"'), token=null, expired=null WHERE user_email=?";
+  var sql = "UPDATE users SET password=sha1('7fa73b47df808d36c5fe328546ddef8b9011b2c6"+ password +"'), token=null, expired=null WHERE user_email=?";
   var values = [req.body.user_email]
   if (password === password2){
     con.query(sql, values, function (err, result) {
@@ -584,7 +592,22 @@ app.post('/reset/:token', function(req, res){
     console.log("Password changed record");
     alert('Password is changed');
     // console.log(studentID);
-  res.redirect('/');
+  //res.redirect('/');
+  });
+
+  var mailOptions = {
+    to: user_email,
+    from: 'passwordrchanged-noreply@demo.com',
+    subject: 'Password Changed',
+    text: 'Dear, '+ user_email +'.\n\n' +
+      'As you requested, your password has now been reset. \n Your new details are as follows: \n' +
+      'Email : ' + user_email + ' \n Password : ' + password + '\n\n' +
+      'Thankyou. \n'
+  };
+
+  sgMail.send(mailOptions, function(err) {
+    req.flash('info', 'Password Changed.');
+    //done(err, 'done');
   });
   }
   else {
@@ -592,6 +615,7 @@ app.post('/reset/:token', function(req, res){
     //res.render('reset', {'notmatch': req.flash('notmatch')})
     alert('Password is not match');
   }
+  res.redirect('/');
 });
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
