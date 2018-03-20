@@ -47,16 +47,22 @@ npm start
 ```
 4. Access this code from browser
 ``` 
-http://localhost:3000/students 
+http://localhost:3000/
 ```
 ## Feature
 * Validation `Every input must be filled`
 * CRUD in students table
 * A chart of gender comparison and A chart of date insertion of data
+* Login and Logout for admin
+* Add user admin
+* authenticated page
+* forgot password
+
 ## Required
 * npm
 * mysql
-
+* moment
+* alert-node
 ## Quote of The Day
 ``` 
 "Kesempurnaan Hanya Milik Allah SWT"
