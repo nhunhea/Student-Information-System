@@ -16,7 +16,11 @@ html
         var data = google.visualization.arrayToDataTable(!{data1});
         var options = {
           title: 'Gender Ratio',
-          'height':500
+          'height':500,
+          slices: {
+            0: { color: '#DB5AC8' },
+            1: { color: '#5ABFDB' }
+          }
         };
         var chart1 = new google.visualization.PieChart(document.getElementById('piechart'));
         chart1.draw(data, options);
@@ -26,9 +30,10 @@ html
         var data = google.visualization.arrayToDataTable(!{data2});
         var options = {
           title: 'Data inserted by month',
-          curveType: 'function',
+          curveType: 'none',
           legend: { position: 'bottom' },
-          vAxis: {minValue: 1},
+          vAxis: {minValue: 3},
+          format: 'none',
           'height':500
         };
         /*for (i = 0; i < data.getNumberOfRows(); i++) {
@@ -70,7 +75,7 @@ html
       h1=title
       div.col-sm-12
         #piechart.chart.text-center
-        .dropdown
+        .dropdown.col-sm-4
           button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
             | Years
           .dropdown-menu

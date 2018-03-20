@@ -1,0 +1,65 @@
+extends layout
+
+block content
+  .container.card
+    h1.text-center.pag=title
+    .row
+      .col-sm-12
+        form.form-inline(action='/students/search', method='POST')
+          input.form-control.col.pag(type='text', name='keyword', placeholder='Search..')
+          select.custom-select.col.pag(name='order')
+            option#order(value='asc') Ascending
+            option#order(value='desc') Descending
+          select.custom-select.col.pag(name='opt')
+            option#opt(value='name') Name
+            option#opt(value='studentID') Student ID
+            option#opt(value='address') Address
+          button.btn.btn-info.col.pag(type='submit') Search
+    .row
+      //.col-sm-12
+      div.table-responsive
+        table.table
+          thead.thead-dark
+            tr.text-center
+              th(scope='col') ID
+              th(scope='col') Username
+              th(scope='col') Email
+              th(scope='col') Password
+              //th Action
+          tbody
+            for user in data
+              tr.text-center
+                td(scope='row')=user.userID
+                td
+                  a(href='/users/'+user.userID) #{user.username}
+                td=user.user_email
+                td=user.password
+                
+                //td.d-inline-flex
+                  form(action='/students/'+student.studentID) 
+                    input.btn.btn-primary.pagb(type="submit" value="Edit")
+                  form(action='/students/delete/'+student.studentID method="POST")
+                    input.btn.btn-danger.pagb(type="submit" value="Delete" onClick="return confirm_delete()")           
+    .row
+      .clearfix
+        .hint-text
+          | Showing 
+          b 1
+          |  out of 
+          b 5
+          |  entries
+        ul.pagination
+          li.page-item.disabled
+            a(href='#') Previous
+          li.page-item.active
+            a.page-link(href='#') 1
+          li.page-item
+            a.page-link(href='#') 2
+          li.page-item
+            a.page-link(href='#') 3
+          li.page-item
+            a.page-link(href='#') 4
+          li.page-item
+            a.page-link(href='#') 5
+          li.page-item
+            a.a(href='#') Next

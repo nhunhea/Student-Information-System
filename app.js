@@ -20,6 +20,12 @@ var users = require('./routes/users');
 
 var app = express();
 var mysql = require('mysql');
+var alert = require('alert-node');
+var async = require('async');
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+var moment = require('moment');
+moment().format();
 
 var con = mysql.createConnection({
   host: "localhost",
@@ -68,7 +74,7 @@ passport.use("local", new LocalStrategy({
 
       var salt = "7fa73b47df808d36c5fe328546ddef8b9011b2c6";
       
-      con.query("select * from user where username = ?", [username], function(err, rows) {
+      con.query("select * from users where username = ?", [username], function(err, rows) {
          // console.log(err);
           console.log(rows);
 
@@ -96,7 +102,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-  con.query("select * from user where userID = " + id, function(err,rows) {
+  con.query("select * from users where userID = " + id, function(err,rows) {
     done(err, rows[0]);
   });
 });
@@ -187,7 +193,7 @@ app.get('/students', isAuthenticated, function(req, res) {
   });
 });
 
-app.get('/students/insert',isAuthenticated, function(req,res){
+app.get('/students/insert', isAuthenticated, function(req,res){
   res.render('insert', {title: 'Add Student'});
 });
 
@@ -222,6 +228,82 @@ app.post('/students/insert',function(req,res){
    // res.render('insert');
  // }
 })
+
+//users add
+app.get('/users/insert',isAuthenticated, function(req,res){
+  res.render('insert-user', {title: 'Insert User'});
+});
+app.post('/users/insert', isAuthenticated, function(req,res){
+  // if (dobval == true ){
+     var username = req.body.username;
+     var password = req.body.password;
+     var user_email = req.body.user_email;
+ 
+     var sql = "INSERT INTO users (username, password, user_email) VALUES ('"+username+"', sha1('7fa73b47df808d36c5fe328546ddef8b9011b2c6"+password+"'),'"+user_email+"')";
+     var sql1 = "SELECT * FROM users WHERE username = ?"
+     var sql2 = "SELECT * FROM users WHERE user_email = ?";
+     con.query(sql1, username, function(err, rows, fields) {
+      if (err) throw err;
+      if(rows.length > 0) {
+        alert('Username already registered !');
+        console.log('Username already registered !');
+			} else {
+        con.query(sql, function(err, res) {
+          if (err) throw err;
+          console.log("User : 1 record inserted");
+				 });
+				 res.redirect('/user_admin');
+      }
+
+			if(rows.length > 0) {
+        alert('Email already registered !');
+        console.log('Email already registered !');
+			} else {
+        con.query(sql, function(err, res) {
+          if (err) throw err;
+          console.log("User : 1 record inserted");
+				 });
+				 res.redirect('/user_admin');
+      }
+    });
+     /*con.query(sql, function (err, result) {
+       if (err) throw err;
+       console.log("User : 1 record inserted");
+     res.redirect('/user_admin');
+     });*/
+   //} else {
+    // console.log("Date is invalid");
+    // res.render('insert');
+  // }
+ })
+ app.get('/user_admin', isAuthenticated, function(req, res) {
+  var userList = [];
+
+  // Do the query to get data.
+  con.query('SELECT * FROM users ORDER BY userID DESC', function(err, rows, fields) {
+    if (err) {
+      res.status(500).json({"status_code": 500,"status_message": "internal server error"});
+    } else {
+      console.log(rows);
+
+      // Loop check on each row
+      for (var i = 0; i < rows.length; i++) {
+
+        // Create an object to save current row's data
+        var user = {
+          'userID':rows[i].userID,
+          'username':rows[i].username,
+          'password':rows[i].password,
+          'user_email':rows[i].user_email
+         // 'date_time':formatDatem(rows[i].date_time)
+        }
+        // Add object into array
+        userList.push(user);
+      }
+    res.render('user-list', {title: 'User List', data: userList});
+    }
+  });
+});
 
 function dataAdapter(obj, cols){
   const chartData=[[...cols]]; //splat operator
@@ -288,62 +370,6 @@ app.get('/students/stat/:year', isAuthenticated, function(req,res){
           //this is so soooooooooooo
           get_freqs.fill(rows[i].freqs, months, (months+1));
         }
-        /*if (rows.length < 12) {
-          for (var j=0; j < 12; j++){
-            //get_freqs.push(rows[j].freqs);
-            get_freqs.push(0);
-          }
-        }
-        /*else {
-          for (var j=0; j<rows.length; j++){
-            get_freqs.push(rows[j].freqs);
-          }
-        }
-        for (var j=0; j<rows.length; j++){
-          //get_month.push(month);
-          if (rows[j].month === 1) {
-            //get_month.push('January');
-            get_freqs.push(rows[j].freqs);
-          }
-          else if (rows[j].month === 2) {
-            //get_month.push('February')
-            get_freqs.push(rows[j].freqs);
-          }
-          else if (rows[j].month === 3) {
-            //get_month.push('March')
-            get_freqs.push(rows[j].freqs);
-          }
-          else if (rows[j].month === 4) {
-            get_month.push('April')
-          }
-          else if (rows[j].month === 5) {
-            get_month.push('Mei')
-          }
-          else if (rows[j].month === 6) {
-            get_month.push('June')
-          }
-          else if (rows[j].month === 7) {
-            get_month.push('July')
-          }
-          else if (rows[j].month === 8) {
-            get_month.push('August')
-          }
-          else if (rows[j].month === 9) {
-            get_month.push('September')
-          }
-          else if (rows[j].month === 10) {
-            get_month.push('October')
-          }
-          else if (rows[j].month === 11) {
-            get_month.push('November')
-          }
-          else {
-            get_month.push('December')
-          }
-          //get_freqs.push(rows[j].freqs);
-        }*/
-
-
       
         temp_freqs.push(get_month, get_freqs)
         console.log(get_freqs);
@@ -456,6 +482,117 @@ app.post('/students/search', function(req,res){
   });
 });
 
+app.get('/forgot', function(req,res){
+  res.render('forgot', {title: 'Reset Email'});
+});
+
+app.post('/forgot', function(req, res, next) {
+  var email=req.body.user_email;
+  console.log(email);
+  async.waterfall([
+    function(done) {
+      crypto.randomBytes(20, function(err, buf) {
+        var token = buf.toString('hex');
+        done(err, token);
+      });
+    },
+    function(token, done) {
+      console.log(token);
+      con.query('select * from users where user_email=?', email, function(err, rows) {
+        if (rows.length <= 0) {
+          req.flash('error', 'No account with that email address exists.');
+          return res.redirect('/forgot');
+        }
+
+        var resetToken = token;
+        var resetExpires = moment().toDate();
+        console.log(resetExpires);
+        var reset = {token: resetToken, expired: resetExpires}
+
+        con.query("update users SET ? where user_email='"+email+"' ", [reset], function(err) {
+          done(err, token, rows);
+          console.log(rows);
+        });
+      });
+    },
+    function(token, rows, done) {
+      /*var smtpTransport = nodemailer.createTransport('SMTP', {
+        service: 'SendGrid',
+        auth: {
+          user: '!!! !!!',
+          pass: '!!! YOUR SENDGRID PASSWORD !!!'
+        }
+      });*/
+      console.log(rows[0].user_email);
+      var mailOptions = {
+        to: rows[0].user_email,
+        from: 'passwordreset@demo.com',
+        subject: 'Node.js Password Reset',
+        text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+          'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+      };
+  
+      sgMail.send(mailOptions, function(err) {
+        req.flash('info', 'An e-mail has been sent to ' + rows[0].user_email + ' with further instructions.');
+        done(err, 'done');
+      });
+    }
+  ], function(err) {
+    if (err) return next(err);
+    res.redirect('/forgot');
+  });
+});
+
+app.get('/reset/:token', function(req, res) {
+  con.query("select * from users where token='"+req.params.token+"' ", function(err, rows) {
+    if (err) throw err
+
+    if (rows.length<=0) {
+      req.flash('error', 'Password reset token is invalid or has expired.');
+      return res.redirect('/forgot');
+    }
+    console.log(rows[0].expired);
+    var min = moment().diff(rows[0].expired, 'minute');
+    console.log(min);
+    if (min >= 15) {
+      req.flash('error', 'Password reset token is invalid or has expired.');
+      alert('Password reset token is invalid or has expired.');
+      return res.redirect('/forgot');
+    }
+    var username = rows[0].username;
+    var user_email = rows[0].user_email;
+    res.render('reset', {
+      username: username,
+      user_email: user_email
+    })
+  });
+});
+
+app.post('/reset/:token', function(req, res){
+  var username = req.body.username;
+  var password = req.body.password;
+  var password2 = req.body.conpassword;
+  var user_email = req.body.user_email;
+
+  var sql = "UPDATE users SET password=sha1('7fa73b47df808d36c5fe328546ddef8b9011b2c6"+password+"'), token=null, expired=null WHERE user_email=?";
+  var values = [req.body.user_email]
+  if (password === password2){
+    con.query(sql, values, function (err, result) {
+    if (err) err;
+    console.log("Password changed record");
+    alert('Password is changed');
+    // console.log(studentID);
+  res.redirect('/');
+  });
+  }
+  else {
+    //req.flash('notmatch', 'Password is not match');
+    //res.render('reset', {'notmatch': req.flash('notmatch')})
+    alert('Password is not match');
+  }
+});
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
