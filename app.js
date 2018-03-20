@@ -243,7 +243,7 @@ app.post('/users/insert', isAuthenticated, function(req,res){
      var sql1 = "SELECT * FROM users WHERE username = ?"
      var sql2 = "SELECT * FROM users WHERE user_email = ?";
      con.query(sql1, username, function(err, rows, fields) {
-      if (err) throw err;
+      if (err) throw err
       if(rows.length > 0) {
         alert('Username already registered !');
         console.log('Username already registered !');
@@ -254,7 +254,9 @@ app.post('/users/insert', isAuthenticated, function(req,res){
 				 });
 				 res.redirect('/user_admin');
       }
-
+    });
+    con.query(sql2, user_email, function(err, rows, fields) {
+      if (err) throw err
 			if(rows.length > 0) {
         alert('Email already registered !');
         console.log('Email already registered !');
