@@ -223,13 +223,8 @@ app.post('/students/insert',function(req,res){
       console.log("1 record inserted");
     res.redirect('/students');
     });
-  //} else {
-   // console.log("Date is invalid");
-   // res.render('insert');
- // }
 })
 
-//users add
 app.get('/users/insert',isAuthenticated, function(req,res){
   res.render('insert-user', {title: 'Insert User'});
 });
