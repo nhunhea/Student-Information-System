@@ -17,25 +17,30 @@ block content
           button.btn.btn-info.col.pag(type='submit') Search
     .row
       //.col-sm-12
-      div.table-responsive
+      .table-responsive
         table.table
           thead.thead-dark
             tr.text-center
               th(scope='col') ID
-              th(scope='col') Username
+              th(scope='col') Name
+              th(scope='col') Address
+              th(scope='col') Gender
+              th(scope='col') Date of Birth
               th(scope='col') Email
-              th(scope='col') Password
-              //th Action
+              th(scope='col') Admission Date
+              th Action
           tbody
-            for user in data
-              tr.text-center
-                td(scope='row')=user.userID
+            for student in data
+              tr
+                td(scope='row')=student.studentID
                 td
-                  a(href='/users/'+user.userID) #{user.username}
-                td=user.user_email
-                td=user.password
-                
-                //td.d-inline-flex
+                  a(href='/students/'+student.studentID) #{student.name}
+                td=student.address
+                td=student.gender
+                td=student.date_of_birth
+                td=student.email
+                td=student.date_time
+                td.d-inline-flex
                   form(action='/students/'+student.studentID) 
                     input.btn.btn-primary.pagb(type="submit" value="Edit")
                   form(action='/students/delete/'+student.studentID method="POST")

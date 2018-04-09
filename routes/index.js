@@ -1,22 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var mysql = require('mysql');
-
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "mydb"
-});
+var path = require('path');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  con.connect(function(err) {
-    if (err) throw err;
-    console.log("Connected!");
-  });
-  
-  res.send('express');    
+  res.render('home', { title: 'Welcome' });
 });
 
 module.exports = router;

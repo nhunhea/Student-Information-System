@@ -1,6 +1,6 @@
 html
   head
-    title= 'Statistik'
+    title=title
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')
@@ -29,17 +29,13 @@ html
       function drawChart2() {
         var data = google.visualization.arrayToDataTable(!{data2});
         var options = {
-          title: 'Data inserted by month',
+          title: 'Data inserted by month in',
           curveType: 'none',
           legend: { position: 'bottom' },
           vAxis: {minValue: 3},
           format: 'none',
           'height':500
         };
-        /*for (i = 0; i < data.getNumberOfRows(); i++) {
-          if ( data.getValue(1, i) == null )
-            data.setValue(1, i) = 0
-        }*/
         var chart2 = new google.visualization.LineChart(document.getElementById('line_chart'));
         chart2.draw(data, options);
       }
@@ -62,11 +58,15 @@ html
                 | Home 
                 span.sr-only (current)
             li.nav-item
-              a.nav-link(href='/students/stat/2018') Statistics
+              a.nav-link(href='/stat/2018') Statistics
             li.nav-item
               a.nav-link(href='/students') Students List
             li.nav-item
               a.nav-link(href='/students/insert') Add Students
+            li.nav-item
+              a.nav-link(href='/users') User List
+            li.nav-item
+              a.nav-link(href='/users/insert') Insert User
           form.form-inline.my-2.my-lg-0
             .nav-item.bg-light.text-white
               a.nav-link(href='/logout') Logout
@@ -79,8 +79,8 @@ html
           button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
             | Years
           .dropdown-menu
-            a.dropdown-item(href='/students/stat/2016') 2016
-            a.dropdown-item(href='/students/stat/2017') 2017
-            a.dropdown-item(href='/students/stat/2018') 2018
+            a.dropdown-item(href='/stat/2016') 2016
+            a.dropdown-item(href='/stat/2017') 2017
+            a.dropdown-item(href='/stat/2018') 2018
         #line_chart.chart
   
